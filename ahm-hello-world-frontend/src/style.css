@@ -1,0 +1,201 @@
+/* =============================================================================
+ * AHM Hello World — Global Styles & Design Tokens
+ * =============================================================================
+ *
+ * WHAT THIS FILE IS:
+ *   The single global stylesheet for the AHM Hello World application. It defines:
+ *     1. CSS custom properties (design tokens) — the single source of truth for
+ *        colors, spacing, and structural constants used across all components
+ *     2. Base reset styles — removes default browser margins/padding
+ *     3. Layout primitives — reusable class-based layout patterns
+ *     4. Utility classes — small, composable styling helpers
+ *
+ * THE CSS CUSTOM PROPERTY (DESIGN TOKEN) SYSTEM:
+ *   Instead of hard-coding colors like #42b883 in every component, we define
+ *   them ONCE as CSS variables on :root. Components reference them via
+ *   var(--accent-color). This means:
+ *     - Change one value here → entire app theme updates instantly
+ *     - Components stay theme-agnostic (no magic hex values in .vue files)
+ *     - Future dark/light mode support just requires swapping :root values
+ *
+ * WHY :root IS USED:
+ *   :root is a pseudo-class that matches the document's root element (<html>).
+ *   Variables defined here are inherited by ALL elements in the DOM tree —
+ *   every component can access them without any special import or cascade rules.
+ *   It has higher specificity than the `html` selector, ensuring our tokens
+ *   are always available.
+ *
+ * HOW THESE TOKENS ARE CONSUMED BY VUE COMPONENTS:
+ *   Any Vue component's <style scoped> block can use var(--token-name).
+ *   Example: `background-color: var(--surface-color);`
+ *   The browser resolves the variable at computed-style time, so changes
+ *   to :root values (e.g., via JavaScript) instantly propagate everywhere.
+ * ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+ * DESIGN TOKENS
+ * ---------------------------------------------------------------------------
+ * All visual constants live here. Components reference these via var() —
+ * they should NEVER hard-code the hex values directly.
+ * --------------------------------------------------------------------------- */
+:root {
+  /* Background: The deepest background color — applied to <body>.
+   * Very dark gray (#121214) provides a modern dark-theme base that's
+   * easier on the eyes than pure black (#000). */
+  --bg-color: #121214;
+
+  /* Surface: Elevated surface color for cards, panels, and headers.
+   * Slightly lighter than --bg-color to create visual depth/hierarchy.
+   * Used by .app-header, .response-box, tile cards, etc. */
+  --surface-color: #1a1a1e;
+
+  /* Border: Subtle border color for dividing surfaces.
+   * Low contrast against both --bg-color and --surface-color to create
+   * gentle visual separation without harsh lines. */
+  --border-color: #2c2c35;
+
+  /* Text Main: Primary text color — used for headings, body text, labels.
+   * Off-white (#f4f4f7) for readability without the harshness of pure white. */
+  --text-main: #f4f4f7;
+
+  /* Text Muted: Secondary text color — used for descriptions, timestamps,
+   * helper text. Gray-blue tone that recedes visually, establishing a
+   * clear text hierarchy with --text-main. */
+  --text-muted: #94a3b8;
+
+  /* Accent: The brand/action color — Vue.js green (#42b883).
+   * Used for primary buttons, active states, badges, and interactive highlights.
+   * Chosen to echo Vue's identity since AHM is a Vue-powered framework. */
+  --accent-color: #42b883;
+
+  /* Header Height: Fixed pixel height of the top navigation bar.
+   * Used by both .app-header (for its own height) and .app-content
+   * (for margin-top to avoid overlap). 56px matches Material Design's
+   * standard app bar height for mobile. */
+  --header-height: 56px;
+}
+
+/* ---------------------------------------------------------------------------
+ * BASE RESET & BODY STYLES
+ * ---------------------------------------------------------------------------
+ * Removes default browser margins and sets global typography/color.
+ * Applied to html and body to ensure consistent rendering across browsers.
+ * --------------------------------------------------------------------------- */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);  /* Dark background from tokens */
+  color: var(--text-main);            /* Light text from tokens */
+
+  /* System font stack: Uses the OS's native UI font for a native-app feel.
+   * - system-ui: Generic system font (Chrome 111+, Safari 14+)
+   * - -apple-system: San Francisco on macOS/iOS
+   * - sans-serif: Fallback for any platform without system-ui */
+  font-family: system-ui, -apple-system, sans-serif;
+
+  width: 100%;
+
+  /* overflow-x: hidden prevents horizontal scrolling — critical for mobile
+   * where accidental horizontal scroll creates a disorienting UX. */
+  overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+ * LAYOUT PRIMITIVE: .app-layout
+ * ---------------------------------------------------------------------------
+ * The outermost container for any screen/view. Creates a full-viewport
+ * flexbox column that fills the entire visible area.
+ *
+ * WHY 100dvh ALONGSIDE 100vh:
+ *   - 100vh = 100% of the viewport height, but on mobile browsers this
+ *     includes the area hidden behind the address bar.
+ *   - 100dvh = 100% of the DYNAMIC viewport height — it adjusts when the
+ *     mobile browser's address bar folds/unfolds.
+ *   We declare both: browsers that support dvh use it; older browsers
+ *   fall back to vh. This prevents the "bottom 60px hidden behind the
+ *   address bar" bug on mobile Chrome/Safari.
+ *
+ * overflow: hidden prevents the layout container itself from scrolling —
+ * scrolling is delegated to .app-content instead.
+ * --------------------------------------------------------------------------- */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;      /* Fallback for browsers without dvh support */
+  height: 100dvh;     /* Dynamic viewport height — adjusts for mobile chrome */
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------------
+ * LAYOUT PRIMITIVE: .app-header
+ * ---------------------------------------------------------------------------
+ * Fixed-position top bar. Stays visible while .app-content scrolls beneath it.
+ * Uses position: fixed so it doesn't participate in the flex layout —
+ * .app-content accounts for it via margin-top.
+ *
+ * z-index: 1000 ensures the header renders above all content, including
+ * any absolutely-positioned overlays within .app-content.
+ * --------------------------------------------------------------------------- */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);   /* Token-driven height for consistency */
+  display: flex;
+  justify-content: center;        /* Center the title horizontally */
+  align-items: center;            /* Center the title vertically */
+  padding: 0 1rem;
+  background-color: var(--surface-color);  /* Elevated surface from tokens */
+  border-bottom: 1px solid var(--border-color); /* Subtle separator line */
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+/* Header title: Sized for mobile readability without overwhelming the bar */
+.app-header h1 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * LAYOUT PRIMITIVE: .app-content
+ * ---------------------------------------------------------------------------
+ * Scrollable content area below the fixed header.
+ * margin-top: var(--header-height) pushes content below the fixed header
+ * (since fixed elements are removed from the normal flow).
+ *
+ * Uses flex-direction: column + align-items: center to stack children
+ * vertically and center them horizontally — a common mobile pattern.
+ * gap: 1rem provides consistent spacing between child elements.
+ * --------------------------------------------------------------------------- */
+.app-content {
+  flex: 1;                        /* Fill remaining vertical space */
+  width: 100%;
+  margin-top: var(--header-height); /* Offset for the fixed header above */
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;                      /* Consistent spacing between children */
+  box-sizing: border-box;
+  overflow-y: auto;               /* Allow vertical scrolling when content overflows */
+}
+
+/* ---------------------------------------------------------------------------
+ * UTILITY: .badge
+ * ---------------------------------------------------------------------------
+ * A small label/tag used for status indicators, counts, or category labels.
+ * Uses a translucent version of --accent-color for the background, creating
+ * a subtle tinted effect that works on any surface color.
+ * --------------------------------------------------------------------------- */
+.badge {
+  background-color: rgba(66, 184, 131, 0.15); /* 15% opacity accent tint */
+  color: var(--accent-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}

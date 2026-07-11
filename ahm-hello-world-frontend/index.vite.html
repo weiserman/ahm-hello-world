@@ -1,0 +1,61 @@
+<!--
+  ===========================================================================
+  AHM Hello World — Vite Mode Entry Point (Production Build)
+  ===========================================================================
+
+  WHAT THIS FILE IS:
+    This is the HTML entry point used by the Vite build system. When you run
+    `npm run vite:dist` (→ `vite build`), Vite parses this file, finds the
+    <script type="module"> tag, and bundles the entire Vue application from
+    src/main.js into optimised static assets in the dist/ folder.
+
+  RELATIONSHIP TO index.html:
+    This project has TWO entry points:
+      - index.html        → SFC-loader mode (no build step; .vue files compiled in-browser)
+      - index.vite.html   → Vite mode (pre-compiled; used for production and development)
+
+    We use a separate filename so that:
+      1. index.html remains available as a standalone, zero-build entry
+      2. The Vite build pipeline doesn't accidentally process the SFC-loader version
+      3. After `vite build`, a plugin renames dist/index.vite.html → dist/index.html
+         so the Android WebView sees the expected default filename
+
+  THE <div id="app"> MOUNT POINT:
+    Vue's createApp().mount('#app') replaces this div's contents with the
+    rendered Vue component tree. This is the single root DOM node for the
+    entire SPA — all screens are rendered inside it via <router-view>.
+
+  WHY <script type="module">:
+    - `type="module"` tells the browser to treat the script as an ES Module.
+    - This enables top-level `import` statements inside main.js.
+    - Modules run in strict mode by default and have their own scope.
+    - In dev mode, Vite's dev server intercepts these imports and serves
+      them via on-demand ESM transforms (no bundling needed for dev).
+    - In production, Vite bundles everything into a single optimised file.
+
+  VIEWPORT META TAG:
+    - width=device-width: matches the device's screen width
+    - initial-scale=1.0: no zoom on load
+    - maximum-scale=1.0, user-scalable=no: prevents pinch-zoom (mobile app feel)
+    - viewport-fit=cover: extends layout into the notch area on modern phones
+
+  LINK REL="ICON" href="data:,":
+    Suppresses the browser's default favicon request (avoids a 404 in dev tools).
+  ===========================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AHM Hello World</title>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <!-- Vue mount point: createApp(Main).mount('#app') renders the entire app here -->
+    <div id="app"></div>
+
+    <!-- Entry module: Vite resolves this to src/main.js which bootstraps the Vue app -->
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>

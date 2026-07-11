@@ -1,0 +1,81 @@
+<!--
+  ===========================================================================
+  AHM Hello World — SFC-Loader Mode Entry Point (Zero-Build)
+  ===========================================================================
+
+  WHAT THIS FILE IS:
+    This is the HTML entry point for SFC-loader mode — a way to run the Vue
+    application WITHOUT any build step. Instead of pre-compiling .vue files
+    with Vite, the browser compiles them at runtime using vue3-sfc-loader.
+
+  WHEN TO USE THIS MODE:
+    - Quick prototyping without running `vite dev`
+    - Debugging inside the Android WebView where Vite dev server isn't available
+    - Situations where you want to edit .vue files and refresh without a watcher
+    - Educational purposes — see the full compilation pipeline in action
+
+  HOW IT DIFFERS FROM index.vite.html:
+    - index.vite.html → imports src/main.js (Vite-compiled entry)
+    - index.html       → imports src/main.sfc.js (runtime SFC compilation entry)
+
+  THE IMPORTMAP — WHAT IT DOES:
+    The <script type="importmap"> block maps bare module specifiers to actual
+    file paths. When any script writes `import { ref } from 'vue'`, the browser
+    resolves 'vue' to the local vendored file instead of looking it up on npm
+    or a CDN.
+
+    In this file:
+      "vue" → ./src/lib/vue/vue.esm-browser.prod.js
+
+    This is the ESM browser build of Vue 3, checked into source control so
+    that the app works completely offline — essential for the Android WebView
+    which loads files from file:///android_asset/www/.
+
+  WHY VENDORED DEPENDENCIES INSTEAD OF CDN/NPM:
+    1. OFFLINE OPERATION: The Android WebView has no internet guarantee.
+       Vendored libs ensure the app always loads.
+    2. DETERMINISTIC BUILDS: No network flakiness, no version drift.
+    3. NO BUILD STEP NEEDED: SFC-loader mode works with zero tooling —
+       just open the HTML file in a browser or WebView.
+    4. SECURITY: No third-party CDN to trust; all code is auditable in-repo.
+
+  THE MOUNT POINT:
+    <div id="app"> is the same mount target used by both modes.
+    main.sfc.js calls createApp(Main).mount('#app') just like main.js does.
+  ===========================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHM Hello World</title>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+	<!-- Vue mount point: same target used in both Vite and SFC-loader modes -->
+	<div id="app"></div>
+
+	<!--
+	  Import Map:
+	  Maps the bare specifier 'vue' to the vendored ESM browser build.
+	  This lets main.sfc.js and sfcBootstrap.js write `import ... from 'vue'`
+	  without a bundler — the browser natively resolves the import at runtime.
+	-->
+	<script type="importmap">
+	{
+	  "imports": {
+	    "vue": "./src/lib/vue/vue.esm-browser.prod.js"
+	  }
+	}
+	</script>
+
+	<!--
+	  SFC-loader bootstrap entry:
+	  Unlike main.js (which relies on Vite to pre-compile .vue files),
+	  main.sfc.js uses vue3-sfc-loader to compile .vue components in the browser.
+	  This enables a zero-build-step development workflow.
+	-->
+	<script type="module" src="./src/main.sfc.js"></script>
+</body>
+</html>

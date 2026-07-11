@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AHM Hello World</string>
+    <string name="config_workspace_folder_name">AHMHelloWorld</string>
+    <string name="virtual_host">example.com</string>
+</resources>

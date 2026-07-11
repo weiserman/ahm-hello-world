@@ -1,0 +1,26 @@
+# ── Node / Frontend ──────────────────────────────────────────
+node_modules/
+ahm-hello-world-frontend/dist/
+npm-debug.log*
+
+# ── Android / Gradle ─────────────────────────────────────────
+*.apk
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+local.properties
+.gradle/
+**/build/
+*.iml
+.idea/
+.navigation/
+captures/
+output.json
+obj/
+.externalNativeBuild/
+
+# ── OS ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

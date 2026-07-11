@@ -1,0 +1,41 @@
+{
+  "// =============================================================================": "AHM Hello World — Package Configuration",
+  "// PURPOSE": "Minimal dependency manifest for the AHM Hello World frontend.",
+  "// DEPENDENCY STRATEGY": [
+    "This project uses a VENDORED dependency approach for runtime libraries.",
+    "Vue 3 and Vue Router are checked into source control under src/lib/ rather",
+    "than resolved through npm at build time. This ensures deterministic, offline-",
+    "capable builds — critical for embedding inside the Android WebView shell.",
+    "",
+    "dependencies (vue, vue-router): Declared here for documentation purposes and",
+    "  so that Vite can resolve bare-specifier imports like `import { ref } from 'vue'`.",
+    "  In Vite mode, Vite's own resolver maps these to the vendored ESM bundles.",
+    "  In SFC-loader mode, the importmap in index.html maps them instead.",
+    "",
+    "devDependencies (vite, @vitejs/plugin-vue): Only needed during development",
+    "  and production builds. These are NOT shipped inside the Android APK.",
+    "  - vite: The build tool that bundles .vue SFCs, CSS, and JS into a static",
+    "    dist/ folder ready for deployment into android/assets/www/.",
+    "  - @vitejs/plugin-vue: Vite plugin that teaches Vite how to compile .vue",
+    "    Single-File Components (template + script + style in one file).",
+    "",
+    "There is no lockfile (package-lock.json / yarn.lock) because runtime deps",
+    "are vendored, and dev deps are only used in development environments."
+  ],
+  "name": "ahm-hello-world-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "vite:start": "vite",
+    "vite:preview": "vite preview",
+    "vite:dist": "vite build"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "vue": "^3.5.0",
+    "vue-router": "^4.6.0"
+  }
+}
