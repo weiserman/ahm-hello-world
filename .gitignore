@@ -2,6 +2,7 @@
 node_modules/
 ahm-hello-world-frontend/dist/
 npm-debug.log*
+package-lock.json
 
 # ── Android / Gradle ─────────────────────────────────────────
 *.apk
