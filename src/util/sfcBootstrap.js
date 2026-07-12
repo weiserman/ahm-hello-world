@@ -132,13 +132,15 @@ export async function bootstrapSfcApp() {
       const greeting = ref('Hello from Vue 3!');
       const nativeResponse = ref('');
 
-      // Bridge call — identical logic to the .vue version's fetchGreeting().
-      // Calls /api/hello which is intercepted by the Android WebViewClient.
+      // Bridge call to a real harness endpoint. The harness intercepts every
+      // /api/* request in shouldInterceptRequest and dispatches to a native
+      // controller — /api/example/get-test is defined in ExampleController.java
+      // and also triggers a native Toast so you can see the round-trip.
       async function fetchGreeting() {
         try {
-          const res = await fetch('/api/hello');
+          const res = await fetch('/api/example/get-test?tracking_id=hello-world&filter=demo');
           const data = await res.json();
-          nativeResponse.value = data.message;
+          nativeResponse.value = 'Native replied: ' + JSON.stringify(data);
         } catch (err) {
           nativeResponse.value = 'Error: ' + err.message;
         }

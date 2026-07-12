@@ -152,14 +152,10 @@ const nativeResponse = ref('');
 //     - In unit tests with a mocked fetch()
 async function fetchGreeting() {
   try {
-    // This fetch is intercepted by the Android WebViewClient in production.
-    // In a regular browser without a server, this will throw (caught below).
-    const res = await fetch('/api/hello');
+    const res = await fetch('/api/example/get-test?tracking_id=hello-world&filter=demo');
     const data = await res.json();
-    // Update the reactive ref — Vue automatically re-renders the template
-    nativeResponse.value = data.message;
+    nativeResponse.value = 'Native replied: ' + JSON.stringify(data);
   } catch (err) {
-    // Graceful error display — shows the error in the UI instead of crashing
     nativeResponse.value = 'Error: ' + err.message;
   }
 }
