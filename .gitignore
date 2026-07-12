@@ -1,6 +1,6 @@
 # ── Node / Frontend ──────────────────────────────────────────
 node_modules/
-ahm-hello-world-frontend/dist/
+dist/
 npm-debug.log*
 package-lock.json
 
